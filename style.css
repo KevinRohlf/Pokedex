@@ -1,0 +1,32 @@
+body {
+    margin: 0;
+}
+
+#pokedex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.pokemonBox {
+    width: 30vw;
+    max-width: 200px;
+    border: 1px solid black;
+    border-radius: 32px;
+}
+
+.titleBox {
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.pokemonImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pokemonImg img {
+    width: 80%;
+}
