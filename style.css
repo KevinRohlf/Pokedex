@@ -55,3 +55,54 @@ body {
     width: 80%;
     transition: all ease-in-out 255ms;
 }
+
+#selected-pokemon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.4);
+    z-index: 1;
+}
+
+.selection-background {
+    position: relative;
+    height: 70vh;
+    width: 50vw;
+    background-color: white;
+    border-radius: 32px;
+    
+}
+
+.selection-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #D33730;
+    border-radius: 32px;
+    height: 50%;
+}
+
+.selection-title {
+    display: flex;
+    justify-content: space-around;
+    color: white;
+}
+
+.selection-Img {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.selection-Img img{
+    width: 25vw;
+}
+
+
+
