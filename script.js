@@ -79,7 +79,6 @@ function findOutTypeColor(type, array) {        //find out background color for 
     let types = ['bug', 'dark', 'dragon', 'electric', 'fairy', 'fighting', 'fire', 'flying', 'ghost', 'grass', 'ground', 'ice', 'normal', 'poison', 'psychic', 'rock', 'steel', 'water'];
     let buttons = ['A2CCAB', 'AEAEBC', 'B0E5EC', 'FDFDB9', 'F48AB5', 'F6B29E', 'FEA8AE', 'CBD8E2', 'C8B5C8', '94E5A9', 'B7A591', 'EDF7FC', 'E5CCD3', 'CEB5EC', 'FB8FC8', 'C6A091', 'A2DFCA', 'C3D4FF'];
     let background = ['429854', '5A5A77', '60CBD9', 'FBFB70', 'EA1369', 'ED623A', 'FD4E5B', '95B1C5', '8E688E', '27CA51', '6E491F', 'DAEFFA', 'CA98A7', '9B69D9', 'F81D8F', '8B3E1F', '42BD94', '85A8FF'];
-    let typeColor;
     
     if (array == 'background') {
         for (let i = 0; i < types.length; i++) {
@@ -230,7 +229,7 @@ function renderStats() {        //render the pokemon stats
         let stat = stats[i]
         calcWidthBar(stat['base_stat'])
         index.innerHTML += `
-        <div class="d-flex stats">
+        <div class="d-flex stats great-first-letter">
             <span>${stat['stat']['name']}</span>
             <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="${barWidth}" aria-valuemin="0" aria-valuemax="255">
                 <div class="progress-bar" style="width: ${barWidth}%; --bs-progress-bar-bg: #${bgColor};">${stat['base_stat']}</div>
