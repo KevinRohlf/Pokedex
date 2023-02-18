@@ -280,8 +280,9 @@ async function searchbar() {
 }
 
 async function loadNext() {         //load the next 25 pokemon on scroll to the end of the pokemon div
+    let input = document.getElementById('searchbar').value;
     let pokedex = document.getElementById('pokedex');
-    if ((window.innerHeight + window.scrollY) >= pokedex.offsetHeight && ready) { {
+    if ((window.innerHeight + window.scrollY) >= pokedex.offsetHeight && ready && !input) { {
         ready = false ;
         offset = offset + 25;
         await pokemonNumber();
