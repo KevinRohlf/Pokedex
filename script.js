@@ -10,6 +10,8 @@ let offset = 0;
 let pokemonName;
 let ready = true;
 let barWidth;
+let pokemons = [];
+
 
 
 async function loadPokemonList() {       //load list from all pokemons from API
@@ -17,6 +19,18 @@ async function loadPokemonList() {       //load list from all pokemons from API
     let response = await fetch(url);
     pokemonList = await response.json();
 } 
+
+async function loadPokemons() {
+    let url = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'
+    let response = await fetch(url);
+    let pokemonsList = await response.json();
+    pokemons = [];
+    for (let i = 0; i < pokemonsList['results'].length; i++){
+        let selectedPokemon = pokemonsList['results'][i];
+        pokemons.push(selectedPokemon['name'])
+    }
+    
+}
 
 async function loadPokemon(pokemon) {  //load the pokemon with name from API
     let url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
@@ -28,6 +42,7 @@ async function loadPokemon(pokemon) {  //load the pokemon with name from API
 }
 
 function renderPokemon() {      //render the pokemoncard
+    madeIdsgreater('id', 4);
     pokemonName = currentPokemon['name'];
     pokemonName = pokemonName[0].toUpperCase() + pokemonName.slice(1);
     document.getElementById('pokedex').innerHTML += `
@@ -53,8 +68,8 @@ function renderTypes(id) {      //render TypeButtons in the div with 'id'
 
 
     for (let i = 0; i < types.length; i++) {
-        let type = types[i]['type']['name']
-        findOutTypeColor(type, 'buttons')
+        let type = types[i]['type']['name'];
+        findOutTypeColor(type, 'buttons');
         type = type[0].toUpperCase() + type.slice(1);
         index.innerHTML += `
         <div class="type-buttons" style="background-color: #${btnColor}">
@@ -65,10 +80,10 @@ function renderTypes(id) {      //render TypeButtons in the div with 'id'
 
 async function pokemonNumber() {        //startscript
     await loadPokemonList();
+    loadPokemons();
     for(let i = 0; i < pokemonList['results'].length; i++){
         pokemon = pokemonList['results'][i]['name'];
         await loadPokemon(pokemon);
-        madeIdsgreater('id', 4);
         renderPokemon();
         renderTypes('types' + currentPokemon['id']);
     }
@@ -241,6 +256,27 @@ function renderStats() {        //render the pokemon stats
 function closeSelection() {         //close the selected window
     document.getElementById('selected-pokemon').style = 'display: none';
     document.getElementById('pokedex').style = '';
+}
+
+async function searchbar() {
+    let input = document.getElementById('searchbar').value;
+    input = input.toLowerCase(); 
+    let pokedex = document.getElementById('pokedex');
+    pokedex.innerHTML =''
+    if(input != ''){
+        for (let i = 0; i < pokemons.length; i++) {
+            let pokemonCurrent = pokemons[i];
+            if (pokemonCurrent.includes(input)) {
+                await loadPokemon(pokemonCurrent);
+                renderPokemon();
+            }
+        }
+    } else {
+        pokemonNumber()
+    }
+        
+    
+   
 }
 
 async function loadNext() {         //load the next 25 pokemon on scroll to the end of the pokemon div
