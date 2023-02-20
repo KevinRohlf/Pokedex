@@ -10,7 +10,9 @@ let offset = 0;
 let pokemonName;
 let ready = true;
 let barWidth;
+let isLoading = false;
 let pokemons = [];
+let searchedPokemon = [];
 
 
 
@@ -45,21 +47,7 @@ function renderPokemon() {      //render the pokemoncard
     madeIdsgreater('id', 4);
     pokemonName = currentPokemon['name'];
     pokemonName = pokemonName[0].toUpperCase() + pokemonName.slice(1);
-    document.getElementById('pokedex').innerHTML += `
-    <div onclick="openPokemon('${currentPokemon['name']}')" class="pokemonBox" style="background-color: #${bgColor}">
-        <div class="titleBox">
-            <h2>${pokemonName}</h2>
-            <span>#${id}</span> 
-        </div>
-        <div class="pokemonImg">
-            <img class="pokeball" src="./img/pokeball.svg"> 
-            <img class="pokemon" src="${currentPokemon['sprites']['other']['official-artwork']['front_default']}">
-        </div>
-        <div class="d-flex justify-content-center gap-1" id="types${currentPokemon['id']}">
-
-        </div>
-    </div>`;
-    
+    document.getElementById('pokedex').innerHTML += renderPokemonHTML();
 }
 
 function renderTypes(id) {      //render TypeButtons in the div with 'id' 
@@ -72,22 +60,27 @@ function renderTypes(id) {      //render TypeButtons in the div with 'id'
         findOutTypeColor(type, 'buttons');
         type = type[0].toUpperCase() + type.slice(1);
         index.innerHTML += `
-        <div class="type-buttons" style="background-color: #${btnColor}">
-            ${type}
-        </div>`
+            <div class="type-buttons" style="background-color: #${btnColor}">
+                ${type}
+            </div>`;
     }
 }
 
 async function pokemonNumber() {        //startscript
-    await loadPokemonList();
-    loadPokemons();
-    for(let i = 0; i < pokemonList['results'].length; i++){
-        pokemon = pokemonList['results'][i]['name'];
-        await loadPokemon(pokemon);
-        renderPokemon();
-        renderTypes('types' + currentPokemon['id']);
-    }
+    if(!isLoading){
+        isLoading = true;
+        await loadPokemonList();
+        loadPokemons();
+        for(let i = 0; i < pokemonList['results'].length; i++){
+            pokemon = pokemonList['results'][i]['name'];
+            await loadPokemon(pokemon);
+            renderPokemon();
+            renderTypes('types' + currentPokemon['id']);
+        }
     ready = true;
+    isLoading = false;
+    }
+    
 }
 
 function findOutTypeColor(type, array) {        //find out background color for cards and buttons
@@ -118,41 +111,7 @@ async function openPokemon(pokemon) {       //open the Pokemon details with clic
     findOutTypeColor(currentPokemon['types'][0]['type']['name'], 'buttons')
     document.getElementById('selected-pokemon').style = '';
     document.getElementById('pokedex').style = 'filter: blur(5px);';
-    document.getElementById('selected-pokemon').innerHTML = `
-        <div class="selection-background">
-            <img class="mobile-btn" onclick="closeSelection()" src="./img/exitbtn.svg">
-            <div class="selection-top position-relative" style="background-color: #${bgColor};">
-                
-                <div class="selection-Img">
-                    <img class="selection-pokeball" src="./img/pokeball.svg">
-                    <img class="pokemon" src="${currentPokemon['sprites']['other']['official-artwork']['front_default']}">    
-                </div>
-                <div class="selection-title" style="background-color: #${btnColor};">
-                    <h2 class="margin-unset">${pokemonName}</h2>
-                    <span>#${id}</span> 
-                </div>
-
-            </div>
-            <div class="selection-bottom">
-                <div class="d-flex nav">
-                    <div id="generalBtn" onclick="renderGeneral()" class="nav-btn">
-                        General                   
-                    </div>
-                    <div id="notGeneralBtn" onclick="renderNotGeneral()" class="nav-btn inactive-btn">
-                        Types                   
-                    </div>
-                </div>
-                <div id="general">
-                </div>
-                <div id="stats">
-                    <div class="d-flex justify-content-center stats-title">
-                        Species specific strengths
-                    </div>
-                    <div id="statsImport">
-                    </div>
-                </div>
-            </div>
-        </div>`;
+    document.getElementById('selected-pokemon').innerHTML = renderOpenPokemonHTML();
     renderStats();
     renderGeneral();
 }
@@ -164,23 +123,7 @@ function renderGeneral() {
     madeIdsgreater('weight', 2);
     height = [height.slice(0, -1), ',', height.slice(-1)].join('');
     weight = [weight.slice(0, -1), ',', weight.slice(-1)].join('');
-    document.getElementById('general').innerHTML = `
-        <div class="general-stats">
-            <div class="general-stat">
-                <span>height</span><br>
-                <div><b>${height} m</b></div>
-            </div>
-            <div class="general-stat">
-                <span>weight</span><br>
-                <div><b>${weight} kg</b></div>
-            </div>
-        </div>
-        <div class="general-stats">
-            <div class="general-stat">
-                <span>abilities</span> <br>
-                <div><b id="abilities">lädt...</b></div>
-            </div>
-        </div>`
+    document.getElementById('general').innerHTML = renderGeneralHTML();
         renderAbilities();
 }
 
@@ -241,13 +184,7 @@ function renderStats() {        //render the pokemon stats
     for (let i = 0; i < stats.length; i++) {
         let stat = stats[i]
         calcWidthBar(stat['base_stat'])
-        index.innerHTML += `
-        <div class="d-flex stats great-first-letter">
-            <span>${stat['stat']['name']}</span>
-            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="${barWidth}" aria-valuemin="0" aria-valuemax="255">
-                <div class="progress-bar" style="width: ${barWidth}%; --bs-progress-bar-bg: #${bgColor};">${stat['base_stat']}</div>
-            </div>
-        </div>`
+        index.innerHTML += renderStatsHTML(stat)
     }
 }
 
@@ -256,23 +193,45 @@ function closeSelection() {         //close the selected window
     document.getElementById('pokedex').style = '';
 }
 
+async function search() {
+    await testi()
+    searchbar();
+}
+
+async function testi() {
+    searchedPokemon = [];
+    document.getElementById('pokedex').innerHTML = '';
+}
+
 async function searchbar() {
     let input = document.getElementById('searchbar').value;
     input = input.toLowerCase(); 
     let pokedex = document.getElementById('pokedex');
-    pokedex.innerHTML =''
-    if(input){
-        for (let i = 0; i < pokemons.length; i++) {
-            let pokemonCurrent = pokemons[i];
-            if (pokemonCurrent.includes(input) && input.length >= 3) {
-                await loadPokemon(pokemonCurrent);
+    
+    if (!isLoading) {
+        if(input.length >= 1){
+            isLoading = true;
+            for (let i = 0; i < pokemons.length; i++) {
+                let pokemonCurrent = pokemons[i];
+                if (pokemonCurrent.includes(input)) {
+                    searchedPokemon.push(pokemonCurrent);
+                }
+            }
+            pokedex.innerHTML ='';
+        
+            for (let i = 0; i < searchedPokemon.length; i++) {
+                await loadPokemon(searchedPokemon[i]);
                 renderPokemon();
             }
+            isLoading = false;
+        } else {
+            offset = 0;
+            pokedex.innerHTML ='';
+            searchedPokemon = [];
+            pokemonNumber();
         }
-    } else {
-        offset = 0;
-        pokemonNumber();
     }
+    
 }
 
 async function loadNext() {         //load the next 25 pokemon on scroll to the end of the pokemon div
