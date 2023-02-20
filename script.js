@@ -139,7 +139,7 @@ async function openPokemon(pokemon) {       //open the Pokemon details with clic
                         General                   
                     </div>
                     <div id="notGeneralBtn" onclick="renderNotGeneral()" class="nav-btn inactive-btn">
-                        General                   
+                        Types                   
                     </div>
                 </div>
                 <div id="general">
@@ -171,15 +171,11 @@ function renderGeneral() {
                 <div><b>${height} m</b></div>
             </div>
             <div class="general-stat">
-                <span>class</span><br>
-                <div><b>Samen</b></div>
-            </div>
-        </div>
-        <div class="general-stats">
-            <div class="general-stat">
                 <span>weight</span><br>
                 <div><b>${weight} kg</b></div>
             </div>
+        </div>
+        <div class="general-stats">
             <div class="general-stat">
                 <span>abilities</span> <br>
                 <div><b id="abilities">lädt...</b></div>
@@ -191,7 +187,9 @@ function renderGeneral() {
 function renderNotGeneral() {
     document.getElementById('generalBtn').classList.add('inactive-btn');
     document.getElementById('notGeneralBtn').classList.remove('inactive-btn');
-    document.getElementById('general').innerHTML = ``;
+    document.getElementById('general').innerHTML = `
+        <div id="notGeneral"></div>`;
+    renderTypes('notGeneral')
 }
 
 function renderAbilities() {    
@@ -263,20 +261,18 @@ async function searchbar() {
     input = input.toLowerCase(); 
     let pokedex = document.getElementById('pokedex');
     pokedex.innerHTML =''
-    if(input != ''){
+    if(input){
         for (let i = 0; i < pokemons.length; i++) {
             let pokemonCurrent = pokemons[i];
-            if (pokemonCurrent.includes(input)) {
+            if (pokemonCurrent.includes(input) && input.length >= 3) {
                 await loadPokemon(pokemonCurrent);
                 renderPokemon();
             }
         }
     } else {
-        pokemonNumber()
+        offset = 0;
+        pokemonNumber();
     }
-        
-    
-   
 }
 
 async function loadNext() {         //load the next 25 pokemon on scroll to the end of the pokemon div
