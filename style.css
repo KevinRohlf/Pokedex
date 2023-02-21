@@ -41,6 +41,12 @@ body {
     color: black;
 }
 
+#loading {
+    position: absolute;
+    right: 5px;
+    height: 30px;
+}
+
 #searchbar {
     height: 30px;
     border: 1px solid lightgray;
@@ -177,12 +183,35 @@ body {
 
 .selection-title {
     margin-top: -25px;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     border-radius: 32px;
     height: 67px;
+}
+
+.back-button {
+    position: absolute;
+    left: 10px;
+    transition: all ease-in-out 225ms;
+}
+
+.back-button:hover {
+    transform: scale(1.5);
+    transition: all ease-in-out 225ms;
+}
+
+.next-button {
+    position: absolute;
+    right: 10px;
+    transition: all ease-in-out 225ms;
+}
+
+.next-button:hover {
+    transform: scale(1.5);
+    transition: all ease-in-out 225ms;
 }
 
 .margin-unset {

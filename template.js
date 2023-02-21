@@ -36,7 +36,9 @@ function renderOpenPokemonHTML() {
                 <img class="pokemon" src="${currentPokemon['sprites']['other']['official-artwork']['front_default']}">    
             </div>
             <div class="selection-title" style="background-color: #${btnColor};">
+                <img id="back" class="back-button" onclick="nextOrLastPokemon('${currentPokemon['name']}', 'last')" src="./img/back.svg">
                 <h2 class="margin-unset">${pokemonName}</h2>
+                <img id="next" class="next-button" onclick="nextOrLastPokemon('${currentPokemon['name']}', 'next')" src="./img/next.svg">
                 <span>#${id}</span> 
             </div>
 

@@ -1,15 +1,6 @@
-let currentPokemon;
-let id;
-let height;
-let weight;
-let bgColor;
-let btnColor;
-let pokemonList;
-let pokemon;
+let currentPokemon, id, height, weight, bgColor, btnColor, pokemonList, pokemon, pokemonName, barWidth;
 let offset = 0;
-let pokemonName;
 let ready = true;
-let barWidth;
 let isLoading = false;
 let pokemons = [];
 
@@ -104,8 +95,27 @@ async function openPokemon(pokemon) {       //open the Pokemon details with clic
     document.getElementById('selected-pokemon').style = '';
     document.getElementById('pokedex').style = 'filter: blur(5px);';
     document.getElementById('selected-pokemon').innerHTML = renderOpenPokemonHTML();
+    if(currentPokemon['name'] == pokemons[0]){
+        document.getElementById('back').classList.add('d-none');
+    }
+    if(currentPokemon['name'] == pokemons[pokemons.length - 1]){
+        document.getElementById('next').classList.add('d-none');
+    }
     renderStats();
     renderGeneral();
+}
+
+function nextOrLastPokemon(nameFromPokemon, nextOrLast) {
+    let index = pokemons.indexOf(nameFromPokemon);
+    let value;
+    if(nextOrLast == 'next') {
+        index++;
+        value = pokemons[index];
+    } else {
+        index--;
+        value = pokemons[index];
+    }
+    openPokemon(value);
 }
 
 function renderGeneral() {
@@ -190,8 +200,9 @@ async function searchbar() {
     input = input.toLowerCase();
     let pokedex = document.getElementById('pokedex');
     document.getElementById('searchbar').setAttribute('disabled', 'disabled');
+    document.getElementById('loading').classList.remove('d-none');
     pokedex.innerHTML = "";
-    if (input.length >= 1) {
+    if (input.length > 0) {
         await searchPokemon(input)
     } else {
         offset = 0;
@@ -199,6 +210,7 @@ async function searchbar() {
         pokemonNumber();
     }
     document.getElementById('searchbar').removeAttribute('disabled', 'disabled')
+    document.getElementById('loading').classList.add('d-none');
 }
 
 async function searchPokemon(input) {
