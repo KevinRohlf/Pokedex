@@ -95,10 +95,10 @@ async function openPokemon(pokemon) {       //open the Pokemon details with clic
     document.getElementById('selected-pokemon').style = '';
     document.getElementById('pokedex').style = 'filter: blur(5px);';
     document.getElementById('selected-pokemon').innerHTML = renderOpenPokemonHTML();
-    if(currentPokemon['name'] == pokemons[0]){
+    if (currentPokemon['name'] == pokemons[0]) {
         document.getElementById('back').classList.add('d-none');
     }
-    if(currentPokemon['name'] == pokemons[pokemons.length - 1]){
+    if (currentPokemon['name'] == pokemons[pokemons.length - 1]) {
         document.getElementById('next').classList.add('d-none');
     }
     renderStats();
@@ -108,14 +108,16 @@ async function openPokemon(pokemon) {       //open the Pokemon details with clic
 function nextOrLastPokemon(nameFromPokemon, nextOrLast) {
     let index = pokemons.indexOf(nameFromPokemon);
     let value;
-    if(nextOrLast == 'next') {
+    if (nextOrLast == 'next' && index < pokemons.length) {
         index++;
         value = pokemons[index];
-    } else {
+        openPokemon(value);
+    } else if (nextOrLast == 'last' && index > 0){
         index--;
         value = pokemons[index];
+        openPokemon(value);
     }
-    openPokemon(value);
+    
 }
 
 function renderGeneral() {
@@ -195,7 +197,11 @@ function closeSelection() {         //close the selected window
     document.getElementById('pokedex').style = '';
 }
 
-async function searchbar() {
+function searchbar() {
+    document.getElementById('searchbar').placeholder = 'Press Enter to search...'
+}
+
+async function search() {
     let input = document.getElementById('searchbar').value;
     input = input.toLowerCase();
     let pokedex = document.getElementById('pokedex');
@@ -240,3 +246,16 @@ async function loadNext() {         //load the next 25 pokemon on scroll to the 
 
 window.onscroll = function () { loadNext() }; //load the loadNext function on scroll
 
+
+window.addEventListener("keydown", (e) => {
+    if (e.keyCode == 39)
+        nextOrLastPokemon(currentPokemon['name'], 'next');
+
+    if (e.keyCode == 37) {
+        nextOrLastPokemon(currentPokemon['name'], 'last')
+    }
+})
+
+function doNotClose(event) {
+    event.stopPropagation();
+}

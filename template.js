@@ -27,7 +27,7 @@ function renderPokemonHTML() {
 
 function renderOpenPokemonHTML() {
     return `
-    <div class="selection-background">
+    <div class="selection-background" onclick='doNotClose(event)'>
         <img class="mobile-btn" onclick="closeSelection()" src="./img/exitbtn.svg">
         <div class="selection-top position-relative" style="background-color: #${bgColor};">
             
